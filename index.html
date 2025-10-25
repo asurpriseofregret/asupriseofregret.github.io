@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Something Special ❤️</title>
+    <style>
+        :root {
+            --zomato-red: #E23744;
+            --zomato-red-dark: #CB202D;
+            --color-white: rgba(255, 255, 255, 1);
+            --color-black: rgba(0, 0, 0, 1);
+            --color-gray-50: #F9FAFB;
+            --color-gray-100: #F3F4F6;
+            --color-gray-200: #E5E7EB;
+            --color-gray-300: #D1D5DB;
+            --color-gray-600: #4B5563;
+            --color-gray-700: #374151;
+            --color-gray-800: #1F2937;
+            --color-green: #48C479;
+            --color-orange: #FF9D42;
+            --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background: var(--color-gray-50);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            background: white;
+            position: relative;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* Initial Screen */
+        .initial-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .heart-icon {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .initial-screen h1 {
+            font-size: 1.75rem;
+            color: var(--color-gray-800);
+            margin-bottom: 1rem;
+        }
+
+        .initial-screen p {
+            font-size: 1.125rem;
+            color: var(--color-gray-600);
+            margin-bottom: 3rem;
+        }
+
+        .surprise-btn {
+            background: linear-gradient(135deg, var(--zomato-red), var(--zomato-red-dark));
+            color: white;
+            border: none;
+            padding: 1.25rem 3rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+        }
+
+        .surprise-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px -3px rgba(226, 55, 68, 0.4);
+        }
+
+        .surprise-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Delivery Tracking Screen */
+        .tracking-header {
+            background: var(--zomato-red);
+            color: white;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .tracking-header h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* Map Section */
+        .map-section {
+            height: 280px;
+            background: linear-gradient(135deg, #E8F4F8 0%, #D4E7F0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-route {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 4px;
+            background: var(--zomato-red);
+            transform: translateY(-50%);
+            opacity: 0.6;
+        }
+
+        .route-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--zomato-red);
+            border: 3px solid white;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .route-dot.start {
+            left: 0;
+        }
+
+        .route-dot.end {
+            right: 0;
+        }
+
+        .delivery-icon {
+            position: absolute;
+            top: 50%;
+            left: 55%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            animation: moveDelivery 3s ease-in-out infinite;
+        }
+
+        @keyframes moveDelivery {
+            0%, 100% { left: 55%; }
+            50% { left: 65%; }
+        }
+
+        /* Order Status */
+        .order-status {
+            background: white;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .status-badge {
+            background: linear-gradient(135deg, var(--color-green), #3FB367);
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .status-badge::before {
+            content: "●";
+            margin-right: 0.5rem;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .status-title {
+            font-size: 1.5rem;
+            color: var(--color-gray-800);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .eta {
+            color: var(--color-gray-600);
+            font-size: 1rem;
+        }
+
+        /* Order Details */
+        .order-card {
+            background: white;
+            margin: 1rem;
+            padding: 1.25rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .item-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #FFF5E6, #FFE8CC);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .item-details h3 {
+            font-size: 1.125rem;
+            color: var(--color-gray-800);
+            margin-bottom: 0.25rem;
+        }
+
+        .item-details p {
+            font-size: 0.875rem;
+            color: var(--color-gray-600);
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid var(--color-gray-200);
+            margin: 1.25rem 0;
+        }
+
+        /* Delivery Agent */
+        .agent-section {
+            background: linear-gradient(135deg, #FFF9F5, #FFF3EB);
+            padding: 1.25rem;
+            border-radius: 12px;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--color-gray-600);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+        }
+
+        .agent-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .agent-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--zomato-red), var(--zomato-red-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            font-weight: 700;
+            box-shadow: var(--shadow-md);
+        }
+
+        .agent-info {
+            flex: 1;
+        }
+
+        .agent-name {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--color-gray-800);
+            margin-bottom: 0.25rem;
+        }
+
+        .agent-stats {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            color: var(--color-gray-600);
+        }
+
+        .rating {
+            color: var(--color-orange);
+        }
+
+        .contact-btn {
+            background: white;
+            border: 2px solid var(--zomato-red);
+            color: var(--zomato-red);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .contact-btn:hover {
+            background: var(--zomato-red);
+            color: white;
+        }
+
+        /* Delivery Address */
+        .address-section {
+            margin-top: 1rem;
+            padding: 1.25rem;
+            background: var(--color-gray-50);
+            border-radius: 12px;
+        }
+
+        .address-icon {
+            font-size: 1.25rem;
+            margin-right: 0.75rem;
+        }
+
+        .address-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-gray-700);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .address-text {
+            font-size: 0.9375rem;
+            color: var(--color-gray-600);
+            line-height: 1.5;
+            margin-left: 2rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            margin-top: 1.5rem;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .timeline-item:not(:last-child)::before {
+            content: "";
+            position: absolute;
+            left: 15px;
+            top: 32px;
+            width: 2px;
+            height: calc(100% + 0.5rem);
+            background: var(--color-gray-200);
+        }
+
+        .timeline-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.875rem;
+        }
+
+        .timeline-dot.completed {
+            background: var(--color-green);
+            color: white;
+        }
+
+        .timeline-dot.active {
+            background: var(--zomato-red);
+            color: white;
+            box-shadow: 0 0 0 4px rgba(226, 55, 68, 0.2);
+        }
+
+        .timeline-dot.pending {
+            background: var(--color-gray-200);
+            color: var(--color-gray-600);
+        }
+
+        .timeline-content {
+            flex: 1;
+            padding-top: 0.25rem;
+        }
+
+        .timeline-title {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--color-gray-800);
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-time {
+            font-size: 0.8125rem;
+            color: var(--color-gray-600);
+        }
+
+        /* Loading Animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading.hidden {
+            display: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--color-gray-200);
+            border-top-color: var(--zomato-red);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 1.5rem;
+            color: var(--color-gray-600);
+            font-size: 1rem;
+        }
+
+        /* Responsive */
+        @media (min-width: 480px) {
+            .screen {
+                box-shadow: var(--shadow-lg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Initial Screen -->
+    <div class="screen active initial-screen" id="initialScreen">
+        <div class="heart-icon">🎁</div>
+        <h1>Something Special</h1>
+        <p>You've got a surprise waiting...</p>
+        <button class="surprise-btn" onclick="activateSurprise()">
+            Press this for something cool
+        </button>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading hidden" id="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Preparing your surprise...</div>
+    </div>
+
+    <!-- Delivery Tracking Screen -->
+    <div class="screen" id="trackingScreen">
+        <!-- Header -->
+        <div class="tracking-header">
+            <h2>Order Tracking</h2>
+            <div class="header-icons">
+                <button class="icon-btn">🔔</button>
+                <button class="icon-btn">⋮</button>
+            </div>
+        </div>
+
+        <!-- Map -->
+        <div class="map-section">
+            <div class="map-route">
+                <div class="route-dot start"></div>
+                <div class="route-dot end"></div>
+            </div>
+            <div class="delivery-icon">🛵</div>
+        </div>
+
+        <!-- Order Status -->
+        <div class="order-status">
+            <div class="status-badge">On the way</div>
+            <div class="status-title">Your order is arriving soon!</div>
+            <div class="eta">Estimated arrival: <strong id="etaTime">15-20 minutes</strong></div>
+        </div>
+
+        <!-- Order Details Card -->
+        <div class="order-card">
+            <!-- Order Item -->
+            <div class="order-item">
+                <div class="item-icon">☕</div>
+                <div class="item-details">
+                    <h3>Caramel Java Chip Frappuccino</h3>
+                    <p>Grande • Extra whipped cream</p>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Delivery Agent -->
+            <div class="agent-section">
+                <div class="section-label">Delivered by our best agent</div>
+                <div class="agent-card">
+                    <div class="agent-avatar" id="agentAvatar">
+                        <img src="" alt="Agent" id="agentPhoto" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        <span id="agentInitial">A</span>
+                    </div>
+                    <div class="agent-info">
+                        <div class="agent-name" id="agentName">Your Delivery Agent</div>
+                        <div class="agent-stats">
+                            <div class="stat rating">
+                                ⭐ 5.0
+                            </div>
+                            <div class="stat" id="agentBio">
+                                🏍️ Expert delivery specialist
+                            </div>
+                        </div>
+                    </div>
+                    <button class="contact-btn" onclick="contactAgent()">📞</button>
+                </div>
+            </div>
+
+            <!-- Delivery Address -->
+            <div class="address-section">
+                <div class="address-title">
+                    <span class="address-icon">📍</span>
+                    Delivery Location
+                </div>
+                <div class="address-text" id="deliveryAddress">
+                    Your current location
+                </div>
+            </div>
+
+            <!-- Order Timeline -->
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot completed">✓</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Order Placed</div>
+                        <div class="timeline-time">Just now</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot completed">✓</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Order Confirmed</div>
+                        <div class="timeline-time">Preparing your order</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot active">🏍️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">On the way</div>
+                        <div class="timeline-time">Heading to your location</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot pending">📦</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Delivered</div>
+                        <div class="timeline-time">Coming soon</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // CUSTOMIZATION SECTION - EDIT THESE VALUES
+        // ============================================
+        
+        const CONFIG = {
+            // Your Details
+            agentName: "Aarav Singh",
+            agentPhone: "918905810716", // Your WhatsApp number with country code (no + or spaces)
+            agentPhoto: "https://i.postimg.cc/R0WSQdSX/drums.jpg", 
+            agentInitial: "A", // Single letter to show if no photo
+            agentBio: "Sorry specialist",
+            
+            // Delivery Details
+            deliveryAddress: "202, Royal Rajvilas, 2nd floor, B Block",
+            drinkName: "Caramel Java Chip Frappuccino",
+            drinkSize: "Grande • Hazelnut syrup"
+        };
+        
+        // ============================================
+        // END CUSTOMIZATION SECTION
+        // ============================================
+
+        function activateSurprise() {
+            // Hide initial screen
+            document.getElementById('initialScreen').classList.remove('active');
+            
+            // Show loading
+            const loading = document.getElementById('loading');
+            loading.classList.remove('hidden');
+            
+            // Send notification
+            sendNotification();
+            
+            // Simulate loading and show tracking screen
+            setTimeout(() => {
+                loading.classList.add('hidden');
+                document.getElementById('trackingScreen').classList.add('active');
+                updateETA();
+                loadCustomDetails();
+            }, 2000);
+        }
+
+        function loadCustomDetails() {
+            // Update agent name
+            document.getElementById('agentName').textContent = CONFIG.agentName;
+            
+            // Update agent photo or initial
+            if (CONFIG.agentPhoto) {
+                document.getElementById('agentPhoto').src = CONFIG.agentPhoto;
+                document.getElementById('agentPhoto').style.display = 'block';
+                document.getElementById('agentInitial').style.display = 'none';
+            } else {
+                document.getElementById('agentInitial').textContent = CONFIG.agentInitial;
+            }
+            
+            // Update agent bio
+            document.getElementById('agentBio').textContent = CONFIG.agentBio;
+            
+            // Update delivery address
+            document.getElementById('deliveryAddress').textContent = CONFIG.deliveryAddress;
+        }
+
+        function contactAgent() {
+            // Open WhatsApp with pre-filled message
+            const message = encodeURIComponent("Hey! I got the notification about my order 😊");
+            const whatsappURL = `https://wa.me/${CONFIG.agentPhone}?text=${message}`;
+            window.open(whatsappURL, '_blank');
+        }
+
+        function sendNotification() {
+            // Send Telegram notification
+            const botToken = '8144440918:AAGIB-zgVXjplmrioNYqzi9E3nO3ngJ9_Rk';
+            const chatId = '5727914577';
+            const now = new Date();
+            const time = now.toLocaleString('en-IN', { 
+                timeZone: 'Asia/Kolkata',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+            const message = `🚨 ALERT: She pressed the button!\n\n⏰ Time: ${time}\n📍 It's time to bring that frappuccino!`;
+            
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message
+                })
+            }).catch(err => console.log('Notification sent'));
+        }
+
+        function updateETA() {
+            // Update ETA to current time + 15-20 mins
+            const now = new Date();
+            const eta = new Date(now.getTime() + 17 * 60000); // 17 minutes
+            const hours = eta.getHours();
+            const minutes = eta.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = hours % 12 || 12;
+            
+            document.getElementById('etaTime').textContent = 
+                `${displayHours}:${minutes} ${ampm} (15-20 minutes)`;
+        }
+    </script>
+</body>
+</html>
